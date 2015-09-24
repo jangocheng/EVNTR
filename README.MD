@@ -19,4 +19,4 @@ Removing the photographer from behind the camera, allowing them to roam freely a
 - Live View screen for camera
 
 ## Libs used:
-- [EDSDKWrapper](https://github.com/jossef/edsdk-wrapper)
+- [EDSDKLib](http://www.codeproject.com/Articles/688276/Canon-EDSDK-Tutorial-in-Csharp)
