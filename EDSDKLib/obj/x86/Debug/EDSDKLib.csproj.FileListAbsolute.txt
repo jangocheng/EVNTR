@@ -1,0 +1,10 @@
+C:\Users\IJustWannaGame\Downloads\CanonSDKTutorialV11\CanonSDKTutorial\EDSDKLib\bin\Debug\EDSDKLib.dll
+C:\Users\IJustWannaGame\Downloads\CanonSDKTutorialV11\CanonSDKTutorial\EDSDKLib\bin\Debug\EDSDKLib.pdb
+C:\Users\IJustWannaGame\Downloads\CanonSDKTutorialV11\CanonSDKTutorial\EDSDKLib\obj\x86\Debug\EDSDKLib.csprojResolveAssemblyReference.cache
+C:\Users\IJustWannaGame\Downloads\CanonSDKTutorialV11\CanonSDKTutorial\EDSDKLib\obj\x86\Debug\EDSDKLib.dll
+C:\Users\IJustWannaGame\Downloads\CanonSDKTutorialV11\CanonSDKTutorial\EDSDKLib\obj\x86\Debug\EDSDKLib.pdb
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\EDSDKLib\bin\Debug\EDSDKLib.dll
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\EDSDKLib\bin\Debug\EDSDKLib.pdb
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\EDSDKLib\obj\x86\Debug\EDSDKLib.csprojResolveAssemblyReference.cache
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\EDSDKLib\obj\x86\Debug\EDSDKLib.dll
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\EDSDKLib\obj\x86\Debug\EDSDKLib.pdb

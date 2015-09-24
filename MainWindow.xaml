@@ -1,0 +1,68 @@
+﻿<Window x:Class="EVNTR.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EVNTR"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525" 
+        WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        PreviewKeyDown="StopLiveViewCapture">
+    <Grid>
+
+        <Canvas Name="LVCanvas" />
+
+        <Grid Name="EmailGrouping">
+
+            <Label Name="EnterYourEmail" Content="Enter Your Email!" FontSize="48" Margin="70,34,87,243" HorizontalAlignment="Center" VerticalAlignment="Center" Width="368"/>
+
+            <TextBox Name="EmailInput" Height="30" TextWrapping="Wrap" Text="E-Mail" Width="400" TextChanged="textBox_TextChanged" Margin="58,124,67,196" FontSize="18.667"/>
+
+            <Button Name="SaveEmail" Content="Save" Width="150" Click="button_Click" Margin="181,171,194,144" Height="35">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="#FF7EEA7E"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF4ECD32"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+        </Grid>
+
+        <Button Name="StartCapture" Content="Start Capture" Margin="182,267,201,17" Click="btnStartLiveViewCapture" Width="134" Height="36">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#FF7EEA7E"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FF4ECD32"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+    </Grid>
+</Window>

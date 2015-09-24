@@ -1,0 +1,17 @@
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\bin\Debug\EVNTR.exe.config
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR.csprojResolveAssemblyReference.cache
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\MainWindow.g.cs
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\App.g.cs
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR_MarkupCompile.cache
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR_MarkupCompile.lref
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\bin\Debug\EVNTR.exe
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\bin\Debug\EVNTR.pdb
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\bin\Debug\EDSDKLib.dll
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\bin\Debug\EDSDKLib.pdb
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\App.baml
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\MainWindow.baml
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR.g.resources
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR.Properties.Resources.resources
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR.csproj.GenerateResource.Cache
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR.exe
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\Debug\EVNTR.pdb
