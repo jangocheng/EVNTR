@@ -30,6 +30,10 @@ namespace EVNTR
         private Button btnStartCapture;
         private Grid gridEmailGroup;
 
+        private const string emailInputDefaultText = "E-Mail / Courriel";
+        private string imageDirectory = "C:\\Users\\" + Environment.UserName + "\\Desktop";
+        private FileInfo[] lastThreeImages;
+
         int ErrCount;
         object ErrLock = new object();
 
@@ -57,9 +61,17 @@ namespace EVNTR
         private void toggleEmailGrouping(bool state)
         {
             if (state == true)
-            gridEmailGroup.Visibility = Visibility.Visible;
+            { 
+                gridEmailGroup.Visibility = Visibility.Visible;
+                this.PreviewKeyDown -= keyTakePhotoAction;
+            }
             else
-            gridEmailGroup.Visibility = Visibility.Collapsed;
+            {
+                SaveEmail.Focus();
+                gridEmailGroup.Visibility = Visibility.Collapsed;
+                EmailInput.Text = emailInputDefaultText;
+                this.PreviewKeyDown += keyTakePhotoAction;
+            }
         }
 
         private void killLiveViewOnClose(object sender, CancelEventArgs e)
@@ -72,12 +84,61 @@ namespace EVNTR
         {
             if (e.Key == Key.Space)
             {
-                Console.WriteLine("Spacebar");
-                // Write Image Taking / Saving logic here.
+                // See if you can not hang the liveview update process.
+                // Move to seperate thread? Should be on one already though... 
                 CameraHandler.TakePhoto();
-                //CameraHandler.StopLiveView();
-                //CameraHandler.StartLiveView();
                 toggleEmailGrouping(true);
+            }
+        }
+
+        // To-Do for "end screen"
+        private void emailInput_GotFocus(object sender, RoutedEventArgs e)
+        {
+            EmailInput.Text = EmailInput.Text == emailInputDefaultText ? string.Empty : EmailInput.Text;
+        }
+
+        private void emailInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            EmailInput.Text = EmailInput.Text == string.Empty ? emailInputDefaultText : EmailInput.Text;
+        }
+
+        private void saveEmailOnEnter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.button_Click(EmailInput.Text, e);
+            }
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+
+            if ((EmailInput.Text == emailInputDefaultText) || ((string)sender == ""))
+            {
+                MessageBox.Show("Please enter your email!\n SVP entrer votre courriel!");
+            }
+            else
+            {
+                toggleEmailGrouping(false);
+
+                /*
+
+                    IMPLEMENT SAVE EMAIL TO CSV ALONG WITH IMG NAME
+
+                */ 
+
+                lastThreeImages = Directory.GetFiles(imageDirectory)
+                                             .Select(x => new FileInfo(x))
+                                             .OrderByDescending(x => x.LastWriteTime)
+                                             .Take(3)
+                                             .ToArray();
+                int count = 0;
+                foreach (FileInfo img in lastThreeImages)
+                {
+                    // Replace with save to CSV file for later use.
+                    Console.WriteLine(lastThreeImages[count]);
+                    count++;
+                }
             }
         }
 
@@ -92,7 +153,6 @@ namespace EVNTR
 
         private void btnStartLiveViewCapture(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Ahh you hit me!");
             toggleCaptureBtn(false);
 
             try
@@ -106,7 +166,7 @@ namespace EVNTR
                 CameraHandler.SetSetting(EDSDK.PropID_SaveTo, (uint)EDSDK.EdsSaveTo.Both);
                 CameraHandler.SetCapacity();
                 Console.WriteLine(Environment.UserName);
-                CameraHandler.ImageSaveDirectory = "C:\\Users\\" + Environment.UserName + "\\Desktop";
+                CameraHandler.ImageSaveDirectory = imageDirectory;
                 SetImageAction = (BitmapImage img) => { bgbrush.ImageSource = img; };
             }
             catch (DllNotFoundException) { ReportError("Canon DLLs not found!", true); }
@@ -164,14 +224,5 @@ namespace EVNTR
             lock (ErrLock) { ErrCount--; }
         }
 
-        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
