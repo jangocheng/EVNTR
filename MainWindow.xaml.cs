@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 using EDSDKLib;
 
 namespace EVNTR
@@ -41,6 +42,8 @@ namespace EVNTR
 
             gridEmailGroup = EmailGrouping;
             toggleEmailGrouping(false);
+
+            Closing += new CancelEventHandler(this.killLiveViewOnClose);
         }
 
         private void toggleCaptureBtn(bool state)
@@ -59,13 +62,21 @@ namespace EVNTR
             gridEmailGroup.Visibility = Visibility.Collapsed;
         }
 
+        private void killLiveViewOnClose(object sender, CancelEventArgs e)
+        {
+            if (CameraHandler.IsLiveViewOn)
+                CameraHandler.StopLiveView();
+        }
+
         private void keyTakePhotoAction(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space)
             {
                 Console.WriteLine("Spacebar");
                 // Write Image Taking / Saving logic here.
-                //CameraHandler.TakePhoto();
+                CameraHandler.TakePhoto();
+                //CameraHandler.StopLiveView();
+                //CameraHandler.StartLiveView();
                 toggleEmailGrouping(true);
             }
         }
@@ -92,6 +103,10 @@ namespace EVNTR
                 CameraHandler.LiveViewUpdated += new SDKHandler.StreamUpdate(SDK_LiveViewUpdated);
                 CamList = CameraHandler.GetCameraList();
                 CameraHandler.OpenSession(CamList[0]);
+                CameraHandler.SetSetting(EDSDK.PropID_SaveTo, (uint)EDSDK.EdsSaveTo.Both);
+                CameraHandler.SetCapacity();
+                Console.WriteLine(Environment.UserName);
+                CameraHandler.ImageSaveDirectory = "C:\\Users\\" + Environment.UserName + "\\Desktop";
                 SetImageAction = (BitmapImage img) => { bgbrush.ImageSource = img; };
             }
             catch (DllNotFoundException) { ReportError("Canon DLLs not found!", true); }

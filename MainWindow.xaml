@@ -8,9 +8,9 @@
         Title="MainWindow" Height="350" Width="525" 
         WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
         PreviewKeyDown="StopLiveViewCapture">
-    <Grid>
+    <Grid Background="Black">
 
-        <Canvas Name="LVCanvas" />
+        <Canvas Name="LVCanvas" Margin="100,0" /> 
 
         <Grid Name="EmailGrouping">
 
