@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using EDSDKLib;
+using System.Windows.Threading;
 
 namespace EVNTR
 {
@@ -27,12 +28,14 @@ namespace EVNTR
         List<Camera> CamList;
         Action<BitmapImage> SetImageAction;
         ImageBrush bgbrush = new ImageBrush();
+        DispatcherTimer _CountDownTimer = new DispatcherTimer();
+        int _CountDownTimeRemaining = 11; // +1 for compensation -- Actually 10s
         private Button btnStartCapture;
         private Grid gridEmailGroup;
 
         private const string emailInputDefaultText = "E-Mail / Courriel";
-        private string imageDirectory = "C:\\Users\\" + Environment.UserName + "\\Desktop";
-        private FileInfo[] lastThreeImages;
+        private string imageDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop\EVNTR_Photos";
+        private string userEmailsCSV = @"C:\Users\" + Environment.UserName + @"\Desktop\EVNTR_Photos\CSV\emails_and_photos.csv";
 
         int ErrCount;
         object ErrLock = new object();
@@ -42,15 +45,51 @@ namespace EVNTR
             InitializeComponent();
 
             btnStartCapture = StartCapture;
-            toggleCaptureBtn(true);
+            ToggleCaptureBtn(true);
 
             gridEmailGroup = EmailGrouping;
-            toggleEmailGrouping(false);
+            ToggleEmailGrouping(false);
 
-            Closing += new CancelEventHandler(this.killLiveViewOnClose);
+            ToggleSetupTimer(false);
+
+            _CountDownTimer.Tick += new EventHandler(CountDown_Tick);
+            _CountDownTimer.Interval = new TimeSpan(0, 0, 1);
+
+            Closing += new CancelEventHandler(this.KillLiveViewOnClose);
+
+            if (!Directory.Exists(imageDirectory))
+            {
+                Directory.CreateDirectory(imageDirectory);
+            }
+
+            if (!File.Exists(userEmailsCSV))
+            {
+                string csvHeader = "E-Mail" + "," + "Photo 1" + "," + "Photo 2" + "," + "Photo 3";
+
+                File.WriteAllText(userEmailsCSV, csvHeader);
+            }
+
         }
 
-        private void toggleCaptureBtn(bool state)
+        private void CountDown_Tick(object sender, EventArgs e)
+        {
+
+            if (_CountDownTimeRemaining > 0)
+            {
+                _CountDownTimeRemaining--;
+                Console.WriteLine(_CountDownTimeRemaining);
+                TimerPhotoSetup.Content = _CountDownTimeRemaining;
+            }
+            else
+            {
+                _CountDownTimer.Stop();
+                ToggleSetupTimer(false);
+                CameraHandler.TakePhoto();
+                ToggleEmailGrouping(true);
+            }
+        }
+
+        private void ToggleCaptureBtn(bool state)
         {
             if (state == true)
             btnStartCapture.Visibility = Visibility.Visible;
@@ -58,87 +97,104 @@ namespace EVNTR
             btnStartCapture.Visibility = Visibility.Collapsed;
         }
 
-        private void toggleEmailGrouping(bool state)
+        private void ToggleEmailGrouping(bool state)
         {
             if (state == true)
             { 
                 gridEmailGroup.Visibility = Visibility.Visible;
-                this.PreviewKeyDown -= keyTakePhotoAction;
+                this.PreviewKeyDown -= KeyTakePhotoAction;
             }
             else
             {
                 SaveEmail.Focus();
                 gridEmailGroup.Visibility = Visibility.Collapsed;
                 EmailInput.Text = emailInputDefaultText;
-                this.PreviewKeyDown += keyTakePhotoAction;
+                this.PreviewKeyDown += KeyTakePhotoAction;
             }
         }
 
-        private void killLiveViewOnClose(object sender, CancelEventArgs e)
+        private void ToggleSetupTimer(bool state)
+        {
+            if (state == true)
+            {
+                PreviewKeyDown -= KeyTakePhotoAction;
+                TimerPhotoSetup.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TimerPhotoSetup.Visibility = Visibility.Collapsed;
+                PreviewKeyDown += KeyTakePhotoAction;
+            }
+        }
+
+        private void WriteDataToCSV(string csvFile)
+        {
+                // Temp test to write to CSV
+                FileInfo[] imageFileNames = Directory.GetFiles(imageDirectory)
+                                             .Select(x => new FileInfo(x))
+                                             .OrderByDescending(x => x.LastWriteTime)
+                                             .Take(3)
+                                             .ToArray();
+
+                string dataForCSV = "\n" + EmailInput.Text + "," + imageFileNames[2].Name + "," + imageFileNames[1].Name + "," + imageFileNames[0].Name;
+                File.AppendAllText(csvFile, dataForCSV);
+        }
+
+        private void KillLiveViewOnClose(object sender, CancelEventArgs e)
         {
             if (CameraHandler.IsLiveViewOn)
                 CameraHandler.StopLiveView();
         }
 
-        private void keyTakePhotoAction(object sender, KeyEventArgs e)
+        private void KeyTakePhotoAction(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Space)
             {
                 // See if you can not hang the liveview update process.
                 // Move to seperate thread? Should be on one already though... 
-                CameraHandler.TakePhoto();
-                toggleEmailGrouping(true);
+                _CountDownTimeRemaining = 11;
+                ToggleSetupTimer(true);
+                _CountDownTimer.Start();
+                //_timer.Stop();
+
             }
         }
 
-        // To-Do for "end screen"
-        private void emailInput_GotFocus(object sender, RoutedEventArgs e)
+        private void EmailInput_GotFocus(object sender, RoutedEventArgs e)
         {
             EmailInput.Text = EmailInput.Text == emailInputDefaultText ? string.Empty : EmailInput.Text;
         }
 
-        private void emailInput_LostFocus(object sender, RoutedEventArgs e)
+        private void EmailInput_LostFocus(object sender, RoutedEventArgs e)
         {
             EmailInput.Text = EmailInput.Text == string.Empty ? emailInputDefaultText : EmailInput.Text;
         }
 
-        private void saveEmailOnEnter(object sender, KeyEventArgs e)
+        private void SaveEmailOnEnter(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                this.button_Click(EmailInput.Text, e);
+                this.EmailSaveOnClick(EmailInput.Text, e);
             }
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void EmailSaveOnClick(object sender, RoutedEventArgs e)
         {
 
-            if ((EmailInput.Text == emailInputDefaultText) || ((string)sender == ""))
+            if ((EmailInput.Text == emailInputDefaultText) || (EmailInput.Text == ""))
             {
                 MessageBox.Show("Please enter your email!\n SVP entrer votre courriel!");
             }
             else
             {
-                toggleEmailGrouping(false);
+                WriteDataToCSV(userEmailsCSV);
+                ToggleEmailGrouping(false);
 
                 /*
 
                     IMPLEMENT SAVE EMAIL TO CSV ALONG WITH IMG NAME
 
-                */ 
-
-                lastThreeImages = Directory.GetFiles(imageDirectory)
-                                             .Select(x => new FileInfo(x))
-                                             .OrderByDescending(x => x.LastWriteTime)
-                                             .Take(3)
-                                             .ToArray();
-                int count = 0;
-                foreach (FileInfo img in lastThreeImages)
-                {
-                    // Replace with save to CSV file for later use.
-                    Console.WriteLine(lastThreeImages[count]);
-                    count++;
-                }
+                */
             }
         }
 
@@ -147,19 +203,17 @@ namespace EVNTR
             if (e.Key == Key.Escape)
             {
                 CameraHandler.StopLiveView();
-                toggleCaptureBtn(true);
+                ToggleCaptureBtn(true);
             }
         }
 
-        private void btnStartLiveViewCapture(object sender, RoutedEventArgs e)
+        private void StartLiveViewCaptureBtn(object sender, RoutedEventArgs e)
         {
-            toggleCaptureBtn(false);
+            ToggleCaptureBtn(false);
 
             try
             {
                 CameraHandler = new SDKHandler();
-                //CameraHandler.SetSetting(EDSDK.PropID_SaveTo, (uint)EDSDK.EdsSaveTo.Both);
-                //CameraHandler.CameraAdded += new SDKHandler.CameraAddedHandler(SDK_CameraAdded);
                 CameraHandler.LiveViewUpdated += new SDKHandler.StreamUpdate(SDK_LiveViewUpdated);
                 CamList = CameraHandler.GetCameraList();
                 CameraHandler.OpenSession(CamList[0]);
@@ -182,7 +236,7 @@ namespace EVNTR
             {
                 LVCanvas.Background = bgbrush;
                 CameraHandler.StartLiveView();
-                this.PreviewKeyDown += keyTakePhotoAction;
+                this.PreviewKeyDown += KeyTakePhotoAction;
             }
             else
             {

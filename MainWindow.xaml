@@ -10,15 +10,15 @@
         PreviewKeyDown="StopLiveViewCapture">
     <Grid Background="Black">
 
-        <Canvas Name="LVCanvas" Margin="100,0" /> 
+        <Canvas Name="LVCanvas" Margin="100,0" />
 
         <Grid Name="EmailGrouping">
 
             <Label Name="EnterYourEmail" Content="Enter Your Email!" FontSize="48" Margin="70,34,87,243" HorizontalAlignment="Center" VerticalAlignment="Center" Width="368"/>
 
-            <TextBox Name="EmailInput" GotFocus="emailInput_GotFocus" LostFocus="emailInput_LostFocus" KeyDown="saveEmailOnEnter" Height="30" TextWrapping="Wrap" Text="E-Mail / Courriel" Width="400" Margin="58,124,67,196" FontSize="18.667"/>
+            <TextBox Name="EmailInput" GotFocus="EmailInput_GotFocus" LostFocus="EmailInput_LostFocus" KeyDown="SaveEmailOnEnter" Height="30" TextWrapping="Wrap" Text="E-Mail / Courriel" Width="400" Margin="58,124,67,196" FontSize="18.667"/>
 
-            <Button Name="SaveEmail" Content="Save" Width="150" Click="button_Click" Margin="181,171,194,144" Height="35">
+            <Button Name="SaveEmail" Content="Save" Width="150" Click="EmailSaveOnClick" Margin="181,171,194,144" Height="35">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="#FF7EEA7E"/>
@@ -42,7 +42,9 @@
 
         </Grid>
 
-        <Button Name="StartCapture" Content="Start Capture" Margin="182,267,201,17" Click="btnStartLiveViewCapture" Width="134" Height="36">
+        <Label x:Name="TimerPhotoSetup" Content="" Margin="32" FontSize="233.333" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.5,0.5" Foreground="White" VerticalAlignment="Center"/>
+
+        <Button Name="StartCapture" Content="Start Capture" Margin="182,267,201,17" Click="StartLiveViewCaptureBtn" Width="134" Height="36">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Background" Value="#FF7EEA7E"/>
