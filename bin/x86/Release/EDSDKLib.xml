@@ -1,0 +1,593 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EDSDKLib</name>
+    </assembly>
+    <members>
+        <member name="T:EDSDKLib.SDKHandler">
+            <summary>
+            Handles the Canon SDK
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.MainCamera">
+            <summary>
+            The used camera
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.CameraSessionOpen">
+            <summary>
+            States if a session with the MainCamera is opened
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.IsLiveViewOn">
+            <summary>
+            States if the live view is on or not
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.IsFilming">
+            <summary>
+            States if camera is recording or not
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.ImageSaveDirectory">
+            <summary>
+            Directory to where photos will be saved
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.Evf_ZoomRect">
+            <summary>
+            The focus and zoom border rectangle for live view (set after first use of live view)
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.Evf_ZoomPosition">
+            <summary>
+            The focus and zoom border position of the live view (set after first use of live view)
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.Evf_ImagePosition">
+            <summary>
+            The cropping position of the enlarged live view image (set after first use of live view)
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.Evf_CoordinateSystem">
+            <summary>
+            The live view coordinate system (set after first use of live view)
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.SDKHandler.IsCoordSystemSet">
+            <summary>
+            States if the Evf_CoordinateSystem is already set
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.SDKHandler.Error">
+            <summary>
+            Handles errors that happen with the SDK
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.SDKHandler.DownloadVideo">
+            <summary>
+            States if a finished video should be downloaded from the camera
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.SDKHandler.PrevSaveTo">
+            <summary>
+            For video recording, SaveTo has to be set to Camera. This is to store the previous setting until after the filming.
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.SDKHandler.LVThread">
+            <summary>
+            The thread on which the live view images will get downloaded continuously
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.SDKHandler.LVoff">
+            <summary>
+            If true, the live view will be shut off completely. If false, live view will go back to the camera.
+            </summary>
+        </member>
+        <member name="E:EDSDKLib.SDKHandler.CameraAdded">
+            <summary>
+            Fires if a camera is added
+            </summary>
+        </member>
+        <member name="E:EDSDKLib.SDKHandler.ProgressChanged">
+            <summary>
+            Fires if any process reports progress
+            </summary>
+        </member>
+        <member name="E:EDSDKLib.SDKHandler.LiveViewUpdated">
+            <summary>
+            Fires if the live view image has been updated
+            </summary>
+        </member>
+        <member name="E:EDSDKLib.SDKHandler.CameraHasShutdown">
+            <summary>
+            If the camera is disconnected or shuts down, this event is fired
+            </summary>
+        </member>
+        <member name="E:EDSDKLib.SDKHandler.ImageDownloaded">
+            <summary>
+            If an image is downloaded, this event fires with the downloaded image.
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.#ctor">
+            <summary>
+            Initializes the SDK and adds events
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetCameraList">
+            <summary>
+            Get a list of all connected cameras
+            </summary>
+            <returns>The camera list</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.OpenSession(EDSDKLib.Camera)">
+            <summary>
+            Opens a session with given camera
+            </summary>
+            <param name="newCamera">The camera which will be used</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.CloseSession">
+            <summary>
+            Closes the session with the current camera
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.Dispose">
+            <summary>
+            Closes open session and terminates the SDK
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SDKHandler_CameraAddedEvent(System.IntPtr)">
+            <summary>
+            A new camera was plugged into the computer
+            </summary>
+            <param name="inContext">The pointer to the added camera</param>
+            <returns>An EDSDK errorcode</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.Camera_SDKObjectEvent(System.UInt32,System.IntPtr,System.IntPtr)">
+            <summary>
+            An Objectevent fired
+            </summary>
+            <param name="inEvent">The ObjectEvent id</param>
+            <param name="inRef">Pointer to the object</param>
+            <param name="inContext"></param>
+            <returns>An EDSDK errorcode</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.Camera_SDKProgressCallbackEvent(System.UInt32,System.IntPtr,System.Boolean@)">
+            <summary>
+            A progress was made
+            </summary>
+            <param name="inPercent">Percent of progress</param>
+            <param name="inContext">...</param>
+            <param name="outCancel">Set true to cancel event</param>
+            <returns>An EDSDK errorcode</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.Camera_SDKPropertyEvent(System.UInt32,System.UInt32,System.UInt32,System.IntPtr)">
+            <summary>
+            A property changed
+            </summary>
+            <param name="inEvent">The PropetyEvent ID</param>
+            <param name="inPropertyID">The Property ID</param>
+            <param name="inParameter">Event Parameter</param>
+            <param name="inContext">...</param>
+            <returns>An EDSDK errorcode</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.Camera_SDKStateEvent(System.UInt32,System.UInt32,System.IntPtr)">
+            <summary>
+            The camera state changed
+            </summary>
+            <param name="inEvent">The StateEvent ID</param>
+            <param name="inParameter">Parameter from this event</param>
+            <param name="inContext">...</param>
+            <returns>An EDSDK errorcode</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.DownloadImage(System.IntPtr,System.String)">
+            <summary>
+            Downloads an image to given directory
+            </summary>
+            <param name="ObjectPointer">Pointer to the object. Get it from the SDKObjectEvent.</param>
+            <param name="directory">Path to where the image will be saved to</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.DownloadImage(System.IntPtr)">
+            <summary>
+            Downloads a jpg image from the camera into a Bitmap. Fires the ImageDownloaded event when done.
+            </summary>
+            <param name="ObjectPointer">Pointer to the object. Get it from the SDKObjectEvent.</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetFileThumb(System.String)">
+            <summary>
+            Gets the thumbnail of an image (can be raw or jpg)
+            </summary>
+            <param name="filepath">The filename of the image</param>
+            <returns>The thumbnail of the image</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.DownloadData(System.IntPtr,System.IntPtr)">
+            <summary>
+            Downloads data from the camera
+            </summary>
+            <param name="ObjectPointer">Pointer to the object</param>
+            <param name="stream">Pointer to the stream created in advance</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetImage(System.IntPtr,EDSDKLib.EDSDK.EdsImageSource)">
+            <summary>
+            Creates a Bitmap out of a stream
+            </summary>
+            <param name="img_stream">Image stream</param>
+            <param name="imageSource">Type of image</param>
+            <returns>The bitmap from the stream</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetSettingsList(System.UInt32)">
+            <summary>
+            Gets the list of possible values for the current camera to set.
+            Only the PropertyIDs "AEModeSelect", "ISO", "Av", "Tv", "MeteringMode" and "ExposureCompensation" are allowed.
+            </summary>
+            <param name="PropID">The property ID</param>
+            <returns>A list of available values for the given property ID</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetSetting(System.UInt32)">
+            <summary>
+            Gets the current setting of given property ID as an uint
+            </summary>
+            <param name="PropID">The property ID</param>
+            <returns>The current setting of the camera</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetStringSetting(System.UInt32)">
+            <summary>
+            Gets the current setting of given property ID as a string
+            </summary>
+            <param name="PropID">The property ID</param>
+            <returns>The current setting of the camera</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetStructSetting``1(System.UInt32)">
+            <summary>
+            Gets the current setting of given property ID as a struct
+            </summary>
+            <param name="PropID">The property ID</param>
+            <typeparam name="T">One of the EDSDK structs</typeparam>
+            <returns>The current setting of the camera</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SetSetting(System.UInt32,System.UInt32)">
+            <summary>
+            Sets an uint value for the given property ID
+            </summary>
+            <param name="PropID">The property ID</param>
+            <param name="Value">The value which will be set</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SetStringSetting(System.UInt32,System.String)">
+            <summary>
+            Sets a string value for the given property ID
+            </summary>
+            <param name="PropID">The property ID</param>
+            <param name="Value">The value which will be set</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SetStructSetting``1(System.UInt32,``0)">
+            <summary>
+            Sets a struct value for the given property ID
+            </summary>
+            <param name="PropID">The property ID</param>
+            <param name="Value">The value which will be set</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.StartLiveView">
+            <summary>
+            Starts the live view
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.StopLiveView(System.Boolean)">
+            <summary>
+            Stops the live view
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.DownloadEvf">
+            <summary>
+            Downloads the live view image
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetEvfZoomRect(System.IntPtr)">
+            <summary>
+            Get the live view ZoomRect value
+            </summary>
+            <param name="imgRef">The live view reference</param>
+            <returns>ZoomRect value</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetEvfCoord(System.IntPtr)">
+            <summary>
+            Get the live view coordinate system
+            </summary>
+            <param name="imgRef">The live view reference</param>
+            <returns>the live view coordinate system</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetEvfPoints(System.UInt32,System.IntPtr)">
+            <summary>
+            Get a live view EdsPoint value
+            </summary>
+            <param name="imgRef">The live view reference</param>
+            <returns>a live view EdsPoint value</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.StartFilming(System.String)">
+            <summary>
+            Starts recording a video and downloads it when finished
+            </summary>
+            <param name="FilePath">Directory to where the final video will be saved to</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.StartFilming">
+            <summary>
+            Starts recording a video
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.StopFilming">
+            <summary>
+            Stops recording a video
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.PressShutterButton(EDSDKLib.EDSDK.EdsShutterButton)">
+            <summary>
+            Press the shutter button
+            </summary>
+            <param name="state">State of the shutter button</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.TakePhoto">
+            <summary>
+            Takes a photo with the current camera settings
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.TakePhoto(System.UInt32)">
+            <summary>
+            Takes a photo in bulb mode with the current camera settings
+            </summary>
+            <param name="BulbTime">The time in milliseconds for how long the shutter will be open</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SendSDKCommand(System.Action,System.Boolean)">
+            <summary>
+            Sends a command to the camera safely
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SetCapacity">
+            <summary>
+            Tells the camera that there is enough space on the HDD if SaveTo is set to Host
+            This method does not use the actual free space!
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SetCapacity(System.Int32,System.Int32)">
+            <summary>
+            Tells the camera how much space is available on the host PC
+            </summary>
+            <param name="BytesPerSector">Bytes per sector on HD</param>
+            <param name="NumberOfFreeClusters">Number of free clusters on HD</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SetFocus(System.UInt32)">
+            <summary>
+            Moves the focus (only works while in live view)
+            </summary>
+            <param name="Speed">Speed and direction of focus movement</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.SetManualWBEvf(System.UInt16,System.UInt16)">
+            <summary>
+            Sets the WB of the live view while in live view
+            </summary>
+            <param name="x">X Coordinate</param>
+            <param name="y">Y Coordinate</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetAllEntries">
+            <summary>
+            Gets all volumes, folders and files existing on the camera
+            </summary>
+            <returns>A CameraFileEntry with all informations</returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.UILock(System.Boolean)">
+            <summary>
+            Locks or unlocks the cameras UI
+            </summary>
+            <param name="LockState">True for locked, false to unlock</param>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetChildren(System.IntPtr)">
+            <summary>
+            Gets the children of a camera folder/volume. Recursive method.
+            </summary>
+            <param name="ptr">Pointer to volume or folder</param>
+            <returns></returns>
+        </member>
+        <member name="M:EDSDKLib.SDKHandler.GetBool(System.Int32)">
+            <summary>
+            Converts an int to a bool
+            </summary>
+            <param name="val">Value</param>
+            <returns>A bool created from the value</returns>
+        </member>
+        <member name="T:EDSDKLib.Camera">
+            <summary>
+            A container for camera related information
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.Camera.Ref">
+            <summary>
+            Pointer to SDK camera object
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.Camera.Info">
+            <summary>
+            Information about this camera
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.Camera.Error">
+            <summary>
+            Handles errors that happen with the SDK
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.Camera.#ctor(System.IntPtr)">
+            <summary>
+            Creates a new instance of the Camera class
+            </summary>
+            <param name="Reference">Pointer to the SDK camera object</param>
+        </member>
+        <member name="T:EDSDKLib.CameraValues">
+            <summary>
+            Helper to convert between ID and string camera values
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.CameraValues.AV(System.UInt32)">
+            <summary>
+            Gets the Av string value from an Av ID
+            </summary>
+            <param name="v">The Av ID</param>
+            <returns>the Av string</returns>
+        </member>
+        <member name="M:EDSDKLib.CameraValues.ISO(System.UInt32)">
+            <summary>
+            Gets the ISO string value from an ISO ID
+            </summary>
+            <param name="v">The ISO ID</param>
+            <returns>the ISO string</returns>
+        </member>
+        <member name="M:EDSDKLib.CameraValues.TV(System.UInt32)">
+            <summary>
+            Gets the Tv string value from an Tv ID
+            </summary>
+            <param name="v">The Tv ID</param>
+            <returns>the Tv string</returns>
+        </member>
+        <member name="M:EDSDKLib.CameraValues.AV(System.String)">
+            <summary>
+            Gets the Av ID from an Av string value
+            </summary>
+            <param name="v">The Av string</param>
+            <returns>the Av ID</returns>
+        </member>
+        <member name="M:EDSDKLib.CameraValues.ISO(System.String)">
+            <summary>
+            Gets the ISO ID from an ISO string value
+            </summary>
+            <param name="v">The ISO string</param>
+            <returns>the ISO ID</returns>
+        </member>
+        <member name="M:EDSDKLib.CameraValues.TV(System.String)">
+            <summary>
+            Gets the Tv ID from an Tv string value
+            </summary>
+            <param name="v">The Tv string</param>
+            <returns>the Tv ID</returns>
+        </member>
+        <member name="T:EDSDKLib.CameraFileEntry">
+            <summary>
+            A storage for a camera filesystem entry
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.CameraFileEntry.Name">
+            <summary>
+            Name of this entry
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.CameraFileEntry.IsFolder">
+            <summary>
+            States if this entry is a folder or not
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.CameraFileEntry.Thumbnail">
+            <summary>
+            Thumbnail of this entry (might be null if not available)
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.CameraFileEntry.Entries">
+            <summary>
+            Subentries of this entry (i.e. subfolders)
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.CameraFileEntry.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new instance of the CameraFileEntry class
+            </summary>
+            <param name="Name">Name of this entry</param>
+            <param name="IsFolder">True if this entry is a folder, false otherwise</param>
+        </member>
+        <member name="M:EDSDKLib.CameraFileEntry.AddSubEntries(EDSDKLib.CameraFileEntry[])">
+            <summary>
+            Adds subentries (subfolders) to this entry
+            </summary>
+            <param name="Entries">the entries to add</param>
+        </member>
+        <member name="M:EDSDKLib.CameraFileEntry.AddThumb(System.Drawing.Bitmap)">
+            <summary>
+            Adds a thumbnail to this entry
+            </summary>
+            <param name="Thumbnail">The thumbnail to add</param>
+        </member>
+        <member name="T:EDSDKLib.STAThread">
+            <summary>
+            Helper class to create or run code on STA threads
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.STAThread.ExecLock">
+            <summary>
+            The object that is used to lock the live view thread
+            </summary>
+        </member>
+        <member name="P:EDSDKLib.STAThread.IsSTAThread">
+            <summary>
+            States if the calling thread is an STA thread or not
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.STAThread.main">
+            <summary>
+            The main thread where everything will be executed on
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.STAThread.runAction">
+            <summary>
+            The action to be executed
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.STAThread.runException">
+            <summary>
+            Storage for an exception that might have happened on the execution thread
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.STAThread.isRunning">
+            <summary>
+            States if the execution thread is currently running
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.STAThread.runLock">
+            <summary>
+            Lock object to make sure only one command at a time is executed
+            </summary>
+        </member>
+        <member name="F:EDSDKLib.STAThread.threadLock">
+            <summary>
+            Lock object to synchronize between execution and calling thread
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.STAThread.Init">
+            <summary>
+            Starts the execution thread
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.STAThread.Shutdown">
+            <summary>
+            Shuts down the execution thread
+            </summary>
+        </member>
+        <member name="M:EDSDKLib.STAThread.Create(System.Action)">
+            <summary>
+            Creates an STA thread that can safely execute SDK commands
+            </summary>
+            <param name="a">The command to run on this thread</param>
+            <returns>An STA thread</returns>
+        </member>
+        <member name="M:EDSDKLib.STAThread.ExecuteSafely(System.Action)">
+            <summary>
+            Safely executes an SDK command
+            </summary>
+            <param name="a">The SDK command</param>
+        </member>
+        <member name="M:EDSDKLib.STAThread.ExecuteSafely``1(System.Func{``0})">
+            <summary>
+            Safely executes an SDK command with return value
+            </summary>
+            <param name="func">The SDK command</param>
+            <returns>the return value of the function</returns>
+        </member>
+        <member name="F:EDSDKLib.EDSDK.DLLPath">
+            <summary>
+            Path to the EDSDK DLL
+            </summary>
+        </member>
+    </members>
+</doc>

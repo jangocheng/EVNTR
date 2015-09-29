@@ -1,0 +1,5 @@
+C:\Users\Alex\Documents\Projects\C#\EVNTR\EDSDKLib\bin\Release\EDSDKLib.xml
+C:\Users\Alex\Documents\Projects\C#\EVNTR\EDSDKLib\bin\Release\EDSDKLib.dll
+C:\Users\Alex\Documents\Projects\C#\EVNTR\EDSDKLib\bin\Release\EDSDKLib.pdb
+C:\Users\Alex\Documents\Projects\C#\EVNTR\EDSDKLib\obj\x86\Release\EDSDKLib.dll
+C:\Users\Alex\Documents\Projects\C#\EVNTR\EDSDKLib\obj\x86\Release\EDSDKLib.pdb
