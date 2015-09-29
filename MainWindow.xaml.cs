@@ -50,6 +50,8 @@ namespace EVNTR
             gridEmailGroup = EmailGrouping;
             ToggleEmailGrouping(false);
 
+            ToggleTakePhotoLabel(true);
+
             ToggleSetupTimer(false);
 
             _CountDownTimer.Tick += new EventHandler(CountDown_Tick);
@@ -60,11 +62,12 @@ namespace EVNTR
             if (!Directory.Exists(imageDirectory))
             {
                 Directory.CreateDirectory(imageDirectory);
+                Directory.CreateDirectory(imageDirectory + @"\CSV\");
             }
 
             if (!File.Exists(userEmailsCSV))
             {
-                string csvHeader = "E-Mail" + "," + "Photo 1" + "," + "Photo 2" + "," + "Photo 3";
+                string csvHeader = "E-Mail" + "," + "Photo";
 
                 File.WriteAllText(userEmailsCSV, csvHeader);
             }
@@ -113,6 +116,18 @@ namespace EVNTR
             }
         }
 
+        private void ToggleTakePhotoLabel(bool state)
+        {
+            if (state == true)
+            {
+                PressSpaceBarLabel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                PressSpaceBarLabel.Visibility = Visibility.Collapsed;
+            }
+        }
+
         private void ToggleSetupTimer(bool state)
         {
             if (state == true)
@@ -136,7 +151,7 @@ namespace EVNTR
                                              .Take(3)
                                              .ToArray();
 
-                string dataForCSV = "\n" + EmailInput.Text + "," + imageFileNames[2].Name + "," + imageFileNames[1].Name + "," + imageFileNames[0].Name;
+                string dataForCSV = "\n" + EmailInput.Text + "," + imageFileNames[0].Name;
                 File.AppendAllText(csvFile, dataForCSV);
         }
 
@@ -150,12 +165,10 @@ namespace EVNTR
         {
             if (e.Key == Key.Space)
             {
-                // See if you can not hang the liveview update process.
-                // Move to seperate thread? Should be on one already though... 
+                ToggleTakePhotoLabel(false);
                 _CountDownTimeRemaining = 11;
                 ToggleSetupTimer(true);
                 _CountDownTimer.Start();
-                //_timer.Stop();
 
             }
         }
@@ -189,6 +202,7 @@ namespace EVNTR
             {
                 WriteDataToCSV(userEmailsCSV);
                 ToggleEmailGrouping(false);
+                ToggleTakePhotoLabel(true);
 
                 /*
 
