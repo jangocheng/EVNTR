@@ -36,3 +36,7 @@ C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\x86\Release\MainWindow.baml
 C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\x86\Release\EVNTR.g.resources
 C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\x86\Release\EVNTR.Properties.Resources.resources
 C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\x86\Release\EVNTR.csproj.GenerateResource.Cache
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\bin\x86\Release\EVNTR.exe.manifest
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\bin\x86\Release\EVNTR.application
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\x86\Release\EVNTR.exe.manifest
+C:\Users\IJustWannaGame\Documents\EVNTR\EVNTR\obj\x86\Release\EVNTR.application

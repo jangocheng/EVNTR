@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using System.Windows.Media.Animation;
 using EDSDKLib;
 using System.Windows.Threading;
 
@@ -74,6 +75,20 @@ namespace EVNTR
 
         }
 
+        private void ToggleScreenFlashOverlay()
+        {
+            var animation = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                BeginTime = TimeSpan.FromSeconds(0),
+                Duration = TimeSpan.FromSeconds(0.5),
+                FillBehavior = FillBehavior.Stop
+            };
+
+            ScreenFlashOverlay.BeginAnimation(OpacityProperty, animation);
+        }
+
         private void CountDown_Tick(object sender, EventArgs e)
         {
 
@@ -87,6 +102,7 @@ namespace EVNTR
             {
                 _CountDownTimer.Stop();
                 ToggleSetupTimer(false);
+                ToggleScreenFlashOverlay();
                 CameraHandler.TakePhoto();
                 ToggleEmailGrouping(true);
             }
@@ -94,10 +110,7 @@ namespace EVNTR
 
         private void ToggleCaptureBtn(bool state)
         {
-            if (state == true)
-            btnStartCapture.Visibility = Visibility.Visible;
-            else
-            btnStartCapture.Visibility = Visibility.Collapsed;
+            btnStartCapture.Visibility = state == true ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ToggleEmailGrouping(bool state)
@@ -106,6 +119,8 @@ namespace EVNTR
             { 
                 gridEmailGroup.Visibility = Visibility.Visible;
                 this.PreviewKeyDown -= KeyTakePhotoAction;
+                EmailInput.Focus();
+                Keyboard.Focus(EmailInput);
             }
             else
             {
@@ -118,14 +133,7 @@ namespace EVNTR
 
         private void ToggleTakePhotoLabel(bool state)
         {
-            if (state == true)
-            {
-                PressSpaceBarLabel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                PressSpaceBarLabel.Visibility = Visibility.Collapsed;
-            }
+            PressSpaceBarLabel.Visibility = state == true ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ToggleSetupTimer(bool state)
@@ -141,6 +149,7 @@ namespace EVNTR
                 PreviewKeyDown += KeyTakePhotoAction;
             }
         }
+
 
         private void WriteDataToCSV(string csvFile)
         {
