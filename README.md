@@ -4,7 +4,7 @@
 It's main purpose is to act as a photobooth that can be operated by people attending an event.
 Removing the photographer from behind the camera, allowing them to roam freely around the event or facilitate shooting an event.
 
-If you're interesting in reading the story behind why I created this, I wrote a little blog [entry]().
+If you're interesting in reading the story behind why I created this, I wrote a little blog [entry](http://www.alexcaza.com/blog/2015/10/03/evntr-a-photobooth-software-for-canon-cameras/).
 
 #### TO-DOs:
 - Pre start screen
